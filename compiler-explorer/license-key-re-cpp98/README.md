@@ -1,7 +1,7 @@
 # C++98 Lisans Anahtarı Doğrulama: Tersine Mühendislik Örnekleri
 
 Bu arşiv, lisans anahtarı doğrulama işlevlerinin derlenmiş kodda nasıl
-göründüğünü incelemek amacıyla hazırlanmış yedi bağımsız C++98 örneği içerir.
+göründüğünü incelemek amacıyla hazırlanmış 20 bağımsız C++98 örneği içerir.
 Her `.cpp` dosyası tek başına derlenebilir ve Compiler Explorer'a doğrudan
 aktarılabilir. Örnekler herhangi bir ticari ürünün lisans sistemini içermez.
 
@@ -14,6 +14,19 @@ aktarılabilir. Örnekler herhangi bir ticari ürünün lisans sistemini içerme
 | `05_name_serial.cpp` | Kullanıcı adına bağlı seri numarası | `bob 2180` | Bayt toplamı ve aritmetik işlemler |
 | `06_fnv1a.cpp` | Kullanıcı adının FNV-1a özeti | `abc 1A47E90B` | XOR ve `16777619` ile çarpma |
 | `07_toy_signature.cpp` | Küçük sayılarla imza doğrulama modeli | `42 3065` | Modüler üs alma ve `% 3233` işlemi |
+| `08_casefold.cpp` | Harf büyüklüğünü normalleştirme | `orbit-2026` | ASCII dönüştürme ve karakter karşılaştırması |
+| `09_segments.cpp` | Ön ek, gövde ve son ek denetimi | `LIC-ORBIT-END` | Birden çok `strncmp`/`strcmp` çağrısı |
+| `10_poly_hash.cpp` | Kullanıcı adından polinom özet | `bob 97717` | Döngüde `31` ile çarpma |
+| `11_mirrored_digits.cpp` | Simetrik rakam koşulları | `123456` | İki uçtan karakter okuma |
+| `12_base36.cpp` | Taban-36 çözümleme | `1Z 71` | Harf/rakam dalları ve `36` ile çarpma |
+| `13_lookup_table.cpp` | Dönüştürme tablosu | `ABCD` | Dizinden tablo okuma |
+| `14_crc16.cpp` | CRC-16 kontrol değeri | `ORBIT 2326` | `0x1021` sabiti ve bit döngüsü |
+| `15_machine_binding.cpp` | Makine kimliğine bağlı seri | `bob PC42 9684` | İki girdinin özetlerinin birleştirilmesi |
+| `16_expiry.cpp` | Bitiş tarihi karşılaştırması | `20270101 20261123` | Biçim kontrolü ve sıralı karşılaştırma |
+| `17_feature_flags.cpp` | Özellik bitleri | `A5` | `AND` işlemi ve bit maskesi |
+| `18_group_relation.cpp` | Anahtar grupları arası ilişki | `1234-8649` | Ondalık çözümleme ve aritmetik koşul |
+| `19_rotating_xor.cpp` | Döndürmeli XOR özeti | `bob E7` | 8 bitlik durum güncellemesi |
+| `20_tea_token.cpp` | TEA benzeri tur dönüşümü | `ORBIT 7E9C999771CA4174` | `0x9E3779B9` sabiti ve tur döngüsü |
 
 ## Compiler Explorer'da kullanım
 
@@ -24,9 +37,11 @@ aktarılabilir. Örnekler herhangi bir ticari ürünün lisans sistemini içerme
    izlediği dallar karşılaştırılır.
 4. Komut satırı argümanlarıyla çalıştırma için Compiler Explorer'da
    **Execute only** görünümü açılır. Tablodaki girdiler bu görünümün argüman
-   alanına yazılır. `05` ve `07` numaralı örnekler iki ayrı argüman gerektirir.
+   alanına yazılır. Tablodaki boşluklar ayrı komut satırı argümanlarını
+   gösterir; `15` numaralı örnek üç argüman gerektirir.
 
-Örnekler artan zorluk sırasına göre düzenlenmiştir.
+Dosya numaraları çalışma sırası önerisidir. Zorluk dağılımı aşağıda ayrıca
+verilmiştir; `07` numaralı imza örneği ileri düzeydedir.
 
 ## Compiler options for all levels
 
@@ -37,15 +52,40 @@ karşılaştırılabilir.
 
 | Seviye | Dosyalar | İlk derleme | Karşılaştırma | İnceleme hedefi |
 | --- | --- | --- | --- | --- |
-| Başlangıç | `01`–`03` | `-std=c++98 -O0 -g` | `-std=c++98 -O1 -g` | Koşulların, döngülerin ve aritmetiğin assembly karşılığını belirlemek. |
-| Orta | `04`–`05` | `-std=c++98 -O0 -g` | `-std=c++98 -O2 -g -fno-inline` | XOR, toplama ve karşılaştırma zincirindeki değişiklikleri incelemek. |
-| İleri | `06`–`07` | `-std=c++98 -O2 -g -fno-inline` | `-std=c++98 -O2 -g` | İşlev içeri alma ve döngü dönüşümlerinin etkisini karşılaştırmak. |
+| Başlangıç | `01`–`04`, `08`–`09`, `11`, `16`–`18` | `-std=c++98 -O0 -g` | `-std=c++98 -O1 -g` | Koşulların, döngülerin ve aritmetiğin assembly karşılığını belirlemek. |
+| Orta | `05`–`06`, `10`, `12`–`15`, `19` | `-std=c++98 -O0 -g` | `-std=c++98 -O2 -g -fno-inline` | Döngü, tablo ve özet hesaplamalarının dönüşümünü incelemek. |
+| İleri | `07`, `20` | `-std=c++98 -O2 -g -fno-inline` | `-std=c++98 -O2 -g` | Tur hesapları ile işlev içeri almanın etkisini karşılaştırmak. |
 
 Ek karşılaştırma için her dosya `-std=c++98 -O3` ve `-std=c++98 -Os`
 seçenekleriyle de derlenebilir. İlki daha yüksek hız optimizasyonu, ikincisi
 daha küçük kod boyutu hedefler. Kısa örneklerde `-O2` ile `-O3` aynı çıktıyı
 üretebilir. C++98 uyumluluğunu ve derleyici uyarılarını denetlemek için
 `-std=c++98 -pedantic-errors -Wall -Wextra` kullanılabilir.
+
+## Compiler Explorer yeterli olmadığında
+
+Arşivdeki `Makefile`, tüm örnekleri yerel olarak üç ayrı ELF profiline derler.
+Kaynak dosyalar tek başına kullanılabildiğinden yalnızca bir dosya da doğrudan
+`g++` ile derlenebilir.
+
+```sh
+make -j4 all
+make check
+./build/release/14_crc16 ORBIT 2326
+```
+
+Derlenen dosyalar `build/debug/`, `build/optimized/` ve `build/release/`
+klasörlerine yazılır. Örneğin `build/release/14_crc16` doğrudan Binary Ninja'da
+açılabilir. Komut satırında `binaryninja build/release/14_crc16` kullanılabilir;
+Binary Ninja başka bir konuma kurulmuşsa dosya uygulamanın içinden açılır.
+`build/` klasörü GitHub arşivine eklenmez.
+
+Yerel inceleme için `file build/release/14_crc16`,
+`objdump -d -C build/optimized/14_crc16`,
+`nm -C build/optimized/14_crc16` ve
+`strings build/release/14_crc16` komutları da kullanılabilir. Sembolleri
+kaldırılmış sürümde `nm` işlev adlarını göstermez; bu durumda Binary Ninja'da
+metinler, sabitler ve bunların kod başvuruları izlenir.
 
 ## Binary Ninja için gerçekçi derleme ayarları
 
@@ -99,16 +139,18 @@ Kaynaklar: [Compiler Explorer kullanım kılavuzu](https://github.com/compiler-e
 
 ## Yerel doğrulama
 
-`python3 test_archive.py` komutu, her örneği
+`python3 test_archive.py` veya `make check` komutu, her örneği
 `g++ -std=c++98 -pedantic-errors -Wall -Wextra` seçenekleriyle derler ve
-bir geçerli, bir geçersiz girdiyi sınar. `06_fnv1a.cpp` dosyası 32 bitlik
-`unsigned int` gerektirir; bu koşul derleme sırasında kontrol edilir.
+bir geçerli, bir geçersiz girdiyi sınar. `06_fnv1a.cpp`, `10_poly_hash.cpp`
+ve `20_tea_token.cpp` dosyaları 32 bitlik `unsigned int` gerektirir; bu koşul
+derleme sırasında kontrol edilir.
 
 ## Güvenlik kapsamı
 
-`01`–`06` numaralı dosyalar yerel lisans kontrolü kalıplarını gösterir.
-Biçim denetimi, kontrol rakamı, XOR ve FNV-1a gizli anahtarlı kimlik
-doğrulaması sağlamaz. `07_toy_signature.cpp`, açık anahtarlı imza
-doğrulamasının matematiksel fikrini küçük sayılarla gösterir; güvenli bir
-RSA uygulaması değildir. Gerçek bir lisans sisteminde standart bir imza
+Örneklerin çoğu yerel lisans kontrolü kalıplarını gösterir. Biçim denetimi,
+kontrol rakamı, CRC, XOR ve anahtarsız özetler kriptografik kimlik
+doğrulaması sağlamaz. `07_toy_signature.cpp`, açık anahtarlı imzanın
+matematiksel fikrini küçük sayılarla gösterir; güvenli bir RSA uygulaması
+değildir. `20_tea_token.cpp` içinde dönüşüm anahtarı kodda bulunur ve güvenli
+bir lisans imzası sağlamaz. Gerçek bir lisans sisteminde standart bir imza
 şeması ve güvenilir bir kriptografi kütüphanesi kullanılmalıdır.
