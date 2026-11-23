@@ -1,4 +1,4 @@
-// Kalip 3: Son rakam, ilk bes rakamin agirlikli toplamindan uretilir.
+// Kalıp 3: Son rakam, ilk beş rakamın ağırlıklı toplamından üretilir.
 #include <cstring>
 #include <iostream>
 

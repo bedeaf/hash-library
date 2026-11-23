@@ -1,4 +1,4 @@
-// Kalip 2: Yalnizca anahtarin bicimi kontrol edilir: AAAA-1234.
+// Kalıp 2: Yalnızca anahtarın biçimi kontrol edilir: AAAA-1234.
 #include <cstring>
 #include <iostream>
 

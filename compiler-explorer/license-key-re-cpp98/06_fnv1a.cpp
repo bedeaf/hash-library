@@ -1,5 +1,5 @@
-// Kalip 6: Kullanici adinin 32 bit FNV-1a ozeti seri olarak karsilastirilir.
-// Bu yalnizca bir RE alistirmasidir; FNV-1a kriptografik MAC degildir.
+// Kalıp 6: Kullanıcı adının 32 bit FNV-1a özeti seri olarak karşılaştırılır.
+// Bu yalnızca bir tersine mühendislik alıştırmasıdır; FNV-1a kriptografik MAC değildir.
 #include <climits>
 #include <iomanip>
 #include <iostream>
@@ -7,7 +7,7 @@
 #include <string>
 
 #if UINT_MAX != 0xFFFFFFFFU
-#error "Bu ornek 32 bit unsigned int gerektirir"
+#error "Bu örnek 32 bit unsigned int gerektirir"
 #endif
 
 unsigned int fnv1a(const char* text) {

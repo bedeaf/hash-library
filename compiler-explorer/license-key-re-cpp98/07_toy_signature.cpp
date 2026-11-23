@@ -1,5 +1,5 @@
-// Kalip 7: Imza dogrulamanin kucuk sayilarla matematik modeli.
-// n=3233 ve e=17 guvensiz egitim degerleridir. Gercek RSA lisansi degildir.
+// Kalıp 7: İmza doğrulamanın küçük sayılarla matematik modeli.
+// n=3233 ve e=17 güvensiz eğitim değerleridir. Gerçek RSA lisansı değildir.
 #include <cerrno>
 #include <cstdlib>
 #include <iostream>

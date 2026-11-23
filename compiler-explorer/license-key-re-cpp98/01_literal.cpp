@@ -1,4 +1,4 @@
-// Kalip 1: Anahtar dogrudan sabit metinle karsilastirilir.
+// Kalıp 1: Anahtar doğrudan sabit metinle karşılaştırılır.
 #include <cstring>
 #include <iostream>
 

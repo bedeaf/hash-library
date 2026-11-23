@@ -1,4 +1,4 @@
-// Kalip 5: Seri numarasi kullanici adindan hesaplanir.
+// Kalıp 5: Seri numarası kullanıcı adından hesaplanır.
 #include <iostream>
 #include <sstream>
 #include <string>

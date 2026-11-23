@@ -1,4 +1,4 @@
-// Kalip 4: Beklenen metin XOR ile gizlenir. Bu, gercek sifreleme degildir.
+// Kalıp 4: Beklenen metin XOR ile gizlenir. Bu, gerçek şifreleme değildir.
 #include <cstring>
 #include <iostream>
 
