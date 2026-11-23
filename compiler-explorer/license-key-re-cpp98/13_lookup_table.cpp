@@ -3,16 +3,24 @@
 #include <iostream>
 
 bool valid(const char* key) {
-    const char table[] = "QWERTYUIOPASDFGHJKLZXCVBNM";
-    const char expected[] = "QWER";
-    if (std::strlen(key) != 4)
+    const char substitution_table[] = "QWERTYUIOPASDFGHJKLZXCVBNM";
+    const char expected_pattern[] = "QWER";
+    const int key_length = 4;
+
+    if (std::strlen(key) != key_length) {
         return false;
-    for (int i = 0; i < 4; ++i) {
-        if (key[i] < 'A' || key[i] > 'Z')
-            return false;
-        if (table[key[i] - 'A'] != expected[i])
-            return false;
     }
+
+    for (int position = 0; position < key_length; ++position) {
+        if (key[position] < 'A' || key[position] > 'Z') {
+            return false;
+        }
+        const int table_index = key[position] - 'A';
+        if (substitution_table[table_index] != expected_pattern[position]) {
+            return false;
+        }
+    }
+
     return true;
 }
 

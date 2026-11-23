@@ -4,24 +4,29 @@
 #include <cstdlib>
 #include <iostream>
 
-bool parse_number(const char* text, unsigned long& value) {
-    if (*text == '\0')
+bool parse_unsigned_decimal(const char* text, unsigned long& value) {
+    if (*text == '\0') {
         return false;
-    for (const char* p = text; *p; ++p)
-        if (*p < '0' || *p > '9')
+    }
+    for (const char* digit = text; *digit != '\0'; ++digit) {
+        if (*digit < '0' || *digit > '9') {
             return false;
+        }
+    }
     errno = 0;
     char* end = 0;
     value = std::strtoul(text, &end, 10);
     return errno == 0 && *end == '\0';
 }
 
-unsigned long power_mod(unsigned long base, unsigned long exponent,
-                        unsigned long modulus) {
+unsigned long modular_power(unsigned long base, unsigned long exponent,
+                            unsigned long modulus) {
     unsigned long result = 1;
+    // Üssün her biti için kare al; bit 1 ise çarpımı sonuca ekle.
     while (exponent != 0) {
-        if (exponent & 1ul)
+        if ((exponent & 1ul) != 0) {
             result = (result * base) % modulus;
+        }
         base = (base * base) % modulus;
         exponent >>= 1;
     }
@@ -29,14 +34,18 @@ unsigned long power_mod(unsigned long base, unsigned long exponent,
 }
 
 bool valid(const char* message_text, const char* signature_text) {
+    const unsigned long modulus = 3233ul;
+    const unsigned long public_exponent = 17ul;
     unsigned long message = 0;
     unsigned long signature = 0;
-    if (!parse_number(message_text, message) ||
-        !parse_number(signature_text, signature))
+    if (!parse_unsigned_decimal(message_text, message) ||
+        !parse_unsigned_decimal(signature_text, signature)) {
         return false;
-    if (message >= 3233ul || signature >= 3233ul)
+    }
+    if (message >= modulus || signature >= modulus) {
         return false;
-    return power_mod(signature, 17ul, 3233ul) == message;
+    }
+    return modular_power(signature, public_exponent, modulus) == message;
 }
 
 int main(int argc, char** argv) {

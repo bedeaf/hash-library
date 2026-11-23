@@ -3,14 +3,25 @@
 #include <iostream>
 
 bool valid(const char* key) {
-    if (std::strlen(key) != 9 || key[4] != '-')
+    const int key_length = 9;
+    const int separator_position = 4;
+
+    if (std::strlen(key) != key_length || key[separator_position] != '-') {
         return false;
-    for (int i = 0; i < 4; ++i)
-        if (key[i] < 'A' || key[i] > 'Z')
+    }
+
+    for (int position = 0; position < separator_position; ++position) {
+        if (key[position] < 'A' || key[position] > 'Z') {
             return false;
-    for (int i = 5; i < 9; ++i)
-        if (key[i] < '0' || key[i] > '9')
+        }
+    }
+
+    for (int position = separator_position + 1; position < key_length; ++position) {
+        if (key[position] < '0' || key[position] > '9') {
             return false;
+        }
+    }
+
     return true;
 }
 

@@ -3,27 +3,40 @@
 #include <iostream>
 #include <sstream>
 
-bool decode(const char* text, unsigned int& value) {
-    if (std::strlen(text) != 2)
+int digit_value(char character) {
+    if (character >= '0' && character <= '9') {
+        return character - '0';
+    }
+    if (character >= 'A' && character <= 'Z') {
+        return character - 'A' + 10;
+    }
+    return -1;
+}
+
+bool decode_base36(const char* text, unsigned int& value) {
+    const int key_length = 2;
+    const unsigned int base = 36u;
+    if (std::strlen(text) != key_length) {
         return false;
+    }
+
     value = 0;
-    for (int i = 0; i < 2; ++i) {
-        unsigned int digit;
-        if (text[i] >= '0' && text[i] <= '9')
-            digit = text[i] - '0';
-        else if (text[i] >= 'A' && text[i] <= 'Z')
-            digit = text[i] - 'A' + 10;
-        else
+    for (int position = 0; position < key_length; ++position) {
+        const int digit = digit_value(text[position]);
+        if (digit < 0) {
             return false;
-        value = value * 36u + digit;
+        }
+        value = value * base + static_cast<unsigned int>(digit);
     }
     return true;
 }
 
 bool valid(const char* key, const char* serial) {
     unsigned int value = 0;
-    if (!decode(key, value))
+    if (!decode_base36(key, value)) {
         return false;
+    }
+
     std::ostringstream expected;
     expected << value;
     return expected.str() == serial;

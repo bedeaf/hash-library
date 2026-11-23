@@ -3,16 +3,28 @@
 #include <iostream>
 
 bool valid(const char* key) {
-    if (std::strlen(key) != 6)
+    const int key_length = 6;
+    const int data_digits = 5;
+
+    if (std::strlen(key) != key_length) {
         return false;
-    int sum = 0;
-    for (int i = 0; i < 6; ++i) {
-        if (key[i] < '0' || key[i] > '9')
-            return false;
-        if (i < 5)
-            sum += (key[i] - '0') * (i + 1);
     }
-    return sum % 10 == key[5] - '0';
+
+    for (int position = 0; position < key_length; ++position) {
+        if (key[position] < '0' || key[position] > '9') {
+            return false;
+        }
+    }
+
+    int weighted_sum = 0;
+    for (int position = 0; position < data_digits; ++position) {
+        const int digit = key[position] - '0';
+        const int weight = position + 1;
+        weighted_sum += digit * weight;
+    }
+
+    const int check_digit = key[data_digits] - '0';
+    return weighted_sum % 10 == check_digit;
 }
 
 int main(int argc, char** argv) {

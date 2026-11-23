@@ -4,18 +4,23 @@
 
 unsigned int byte_sum(const char* text) {
     unsigned int sum = 0;
-    const unsigned char* p = reinterpret_cast<const unsigned char*>(text);
-    for (; *p; ++p)
-        sum += *p;
+    const unsigned char* byte = reinterpret_cast<const unsigned char*>(text);
+    for (; *byte != 0; ++byte) {
+        sum += *byte;
+    }
     return sum;
 }
 
 bool valid(const char* name, const char* machine, const char* serial) {
-    if (*name == '\0' || *machine == '\0')
+    if (*name == '\0' || *machine == '\0') {
         return false;
-    unsigned int value = (byte_sum(name) * 31u) ^ byte_sum(machine);
+    }
+
+    const unsigned int name_value = byte_sum(name) * 31u;
+    const unsigned int machine_value = byte_sum(machine);
+    const unsigned int expected_number = name_value ^ machine_value;
     std::ostringstream expected;
-    expected << value;
+    expected << expected_number;
     return expected.str() == serial;
 }
 

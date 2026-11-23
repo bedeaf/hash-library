@@ -3,12 +3,20 @@
 #include <iostream>
 
 bool valid(const char* key) {
-    const unsigned char encoded[5] = { 0x15, 0x08, 0x18, 0x13, 0x0e };
-    if (std::strlen(key) != 5)
+    const unsigned char encoded_key[] = { 0x15, 0x08, 0x18, 0x13, 0x0E };
+    const unsigned char xor_mask = 0x5A;
+
+    if (std::strlen(key) != sizeof(encoded_key)) {
         return false;
-    for (int i = 0; i < 5; ++i)
-        if ((static_cast<unsigned char>(key[i]) ^ 0x5a) != encoded[i])
+    }
+
+    for (unsigned int position = 0; position < sizeof(encoded_key); ++position) {
+        const unsigned char character = static_cast<unsigned char>(key[position]);
+        if ((character ^ xor_mask) != encoded_key[position]) {
             return false;
+        }
+    }
+
     return true;
 }
 

@@ -1,17 +1,24 @@
 // Kalıp 5: Seri numarası kullanıcı adından hesaplanır.
 #include <iostream>
 #include <sstream>
-#include <string>
+
+unsigned int sum_bytes(const char* text) {
+    unsigned int sum = 0;
+    const unsigned char* byte = reinterpret_cast<const unsigned char*>(text);
+    for (; *byte != 0; ++byte) {
+        sum += *byte;
+    }
+    return sum;
+}
 
 bool valid(const char* name, const char* serial) {
-    if (*name == '\0')
+    if (*name == '\0') {
         return false;
-    unsigned int sum = 0;
-    for (const unsigned char* p =
-             reinterpret_cast<const unsigned char*>(name); *p; ++p)
-        sum += *p;
+    }
+
+    const unsigned int expected_number = sum_bytes(name) * 7u + 31u;
     std::ostringstream expected;
-    expected << (sum * 7u + 31u);
+    expected << expected_number;
     return expected.str() == serial;
 }
 

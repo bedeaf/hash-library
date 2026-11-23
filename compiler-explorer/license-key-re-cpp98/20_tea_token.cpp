@@ -10,23 +10,36 @@
 #error "Bu örnek 32 bit unsigned int gerektirir"
 #endif
 
-void token(const char* name, unsigned int& left, unsigned int& right) {
-    unsigned char bytes[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-    for (unsigned int i = 0; i < 8 && name[i] != '\0'; ++i)
-        bytes[i] = static_cast<unsigned char>(name[i]);
-
-    left = 0;
-    right = 0;
-    for (int i = 0; i < 4; ++i) {
-        left |= static_cast<unsigned int>(bytes[i]) << (8 * i);
-        right |= static_cast<unsigned int>(bytes[i + 4]) << (8 * i);
+unsigned int load_little_endian_word(const unsigned char* bytes) {
+    unsigned int word = 0;
+    for (int byte_index = 0; byte_index < 4; ++byte_index) {
+        word |= static_cast<unsigned int>(bytes[byte_index]) << (8 * byte_index);
     }
+    return word;
+}
 
+void make_token(const char* name, unsigned int& left, unsigned int& right) {
+    const int word_size = 4;
+    const int name_capacity = 2 * word_size;
+    const int round_count = 16;
+    const unsigned int round_delta = 0x9E3779B9u;
     const unsigned int key[4] = { 0xA56BABCDu, 0x0000FACEu,
                                   0x01234567u, 0x89ABCDEFu };
+
+    unsigned char name_bytes[name_capacity] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    for (int byte_index = 0;
+         byte_index < name_capacity && name[byte_index] != '\0';
+         ++byte_index) {
+        name_bytes[byte_index] = static_cast<unsigned char>(name[byte_index]);
+    }
+
+    // Sekiz baytı iki adet 32 bit sözcüğe düşük bayt önce olacak biçimde yerleştir.
+    left = load_little_endian_word(name_bytes);
+    right = load_little_endian_word(name_bytes + word_size);
+
     unsigned int sum = 0;
-    for (int round = 0; round < 16; ++round) {
-        sum += 0x9E3779B9u;
+    for (int round = 0; round < round_count; ++round) {
+        sum += round_delta;
         left += ((right << 4) + key[0]) ^ (right + sum) ^
                 ((right >> 5) + key[1]);
         right += ((left << 4) + key[2]) ^ (left + sum) ^
@@ -35,12 +48,14 @@ void token(const char* name, unsigned int& left, unsigned int& right) {
 }
 
 bool valid(const char* name, const char* serial) {
+    const std::size_t maximum_name_length = 8;
     const std::size_t length = std::strlen(name);
-    if (length == 0 || length > 8)
+    if (length == 0 || length > maximum_name_length) {
         return false;
+    }
     unsigned int left = 0;
     unsigned int right = 0;
-    token(name, left, right);
+    make_token(name, left, right);
     std::ostringstream expected;
     expected << std::uppercase << std::hex << std::setfill('0')
              << std::setw(8) << left << std::setw(8) << right;

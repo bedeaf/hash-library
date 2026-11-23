@@ -3,18 +3,25 @@
 #include <cstring>
 #include <iostream>
 
-bool date_format(const char* text) {
-    if (std::strlen(text) != 8)
+bool has_date_format(const char* date) {
+    const int date_length = 8;
+    if (std::strlen(date) != date_length) {
         return false;
-    for (int i = 0; i < 8; ++i)
-        if (text[i] < '0' || text[i] > '9')
+    }
+    for (int position = 0; position < date_length; ++position) {
+        if (date[position] < '0' || date[position] > '9') {
             return false;
+        }
+    }
     return true;
 }
 
-bool valid(const char* expiry, const char* today) {
-    return date_format(expiry) && date_format(today) &&
-           std::strcmp(expiry, today) >= 0;
+bool valid(const char* expiry_date, const char* current_date) {
+    if (!has_date_format(expiry_date) || !has_date_format(current_date)) {
+        return false;
+    }
+    // YYYYMMDD biçiminde sözlük sırası tarih sırasıyla aynıdır.
+    return std::strcmp(expiry_date, current_date) >= 0;
 }
 
 int main(int argc, char** argv) {

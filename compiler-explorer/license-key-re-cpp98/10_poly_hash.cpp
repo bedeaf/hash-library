@@ -8,16 +8,20 @@
 #endif
 
 unsigned int hash_name(const char* name) {
+    const unsigned int multiplier = 31u;
     unsigned int hash = 0;
-    const unsigned char* p = reinterpret_cast<const unsigned char*>(name);
-    for (; *p; ++p)
-        hash = hash * 31u + *p;
+    const unsigned char* byte = reinterpret_cast<const unsigned char*>(name);
+    for (; *byte != 0; ++byte) {
+        hash = hash * multiplier + *byte;
+    }
     return hash;
 }
 
 bool valid(const char* name, const char* serial) {
-    if (*name == '\0')
+    if (*name == '\0') {
         return false;
+    }
+
     std::ostringstream expected;
     expected << hash_name(name);
     return expected.str() == serial;

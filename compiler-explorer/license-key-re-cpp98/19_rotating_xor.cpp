@@ -4,19 +4,25 @@
 #include <iostream>
 #include <sstream>
 
+unsigned int rotate_left_one_bit(unsigned int value) {
+    return ((value << 1) | (value >> 7)) & 0xFFu;
+}
+
 unsigned int token(const char* name) {
     unsigned int state = 0x5Au;
-    const unsigned char* p = reinterpret_cast<const unsigned char*>(name);
-    for (; *p; ++p) {
-        state = ((state << 1) | (state >> 7)) & 0xFFu;
-        state ^= *p;
+    const unsigned char* byte = reinterpret_cast<const unsigned char*>(name);
+    for (; *byte != 0; ++byte) {
+        state = rotate_left_one_bit(state);
+        state ^= *byte;
     }
     return state;
 }
 
 bool valid(const char* name, const char* serial) {
-    if (*name == '\0')
+    if (*name == '\0') {
         return false;
+    }
+
     std::ostringstream expected;
     expected << std::uppercase << std::hex << std::setw(2)
              << std::setfill('0') << token(name);

@@ -3,16 +3,23 @@
 #include <iostream>
 
 bool valid(const char* key) {
-    const char expected[] = "ORBIT-2026";
-    if (std::strlen(key) != sizeof(expected) - 1)
+    const char expected_key[] = "ORBIT-2026";
+    const unsigned int key_length = sizeof(expected_key) - 1;
+
+    if (std::strlen(key) != key_length) {
         return false;
-    for (unsigned int i = 0; i < sizeof(expected) - 1; ++i) {
-        char current = key[i];
-        if (current >= 'a' && current <= 'z')
-            current = static_cast<char>(current - 'a' + 'A');
-        if (current != expected[i])
-            return false;
     }
+
+    for (unsigned int position = 0; position < key_length; ++position) {
+        char normalized = key[position];
+        if (normalized >= 'a' && normalized <= 'z') {
+            normalized = static_cast<char>(normalized - 'a' + 'A');
+        }
+        if (normalized != expected_key[position]) {
+            return false;
+        }
+    }
+
     return true;
 }
 

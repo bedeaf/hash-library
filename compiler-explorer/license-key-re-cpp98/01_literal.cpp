@@ -3,7 +3,8 @@
 #include <iostream>
 
 bool valid(const char* key) {
-    return std::strcmp(key, "ORBIT-2026") == 0;
+    const char expected_key[] = "ORBIT-2026";
+    return std::strcmp(key, expected_key) == 0;
 }
 
 int main(int argc, char** argv) {
