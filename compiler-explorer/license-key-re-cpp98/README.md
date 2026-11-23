@@ -2,8 +2,6 @@
 
 Bu arşiv, lisans anahtarı doğrulama işlevlerinin derlenmiş kodda nasıl
 göründüğünü incelemek amacıyla hazırlanmış 20 bağımsız C++98 örneği içerir.
-Her `.cpp` dosyası tek başına derlenebilir ve Compiler Explorer'a doğrudan
-aktarılabilir. Örnekler herhangi bir ticari ürünün lisans sistemini içermez.
 
 | Dosya | Doğrulama yöntemi | Geçerli örnek girdi | Assembly'de incelenecek yapı |
 | --- | --- | --- | --- |
