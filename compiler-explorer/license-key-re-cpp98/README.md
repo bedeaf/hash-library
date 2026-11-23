@@ -22,8 +22,9 @@ aktarılabilir. Örnekler herhangi bir ticari ürünün lisans sistemini içerme
    **Compiler options** alanına yazılır.
 3. Assembly çıktısında `valid` işlevi bulunur; geçerli ve geçersiz girdilerin
    izlediği dallar karşılaştırılır.
-4. Program çalıştırılacaksa tabloda yer alan girdi komut satırı argümanı
-   olarak verilir. `05` ve `07` numaralı örnekler iki ayrı argüman gerektirir.
+4. Komut satırı argümanlarıyla çalıştırma için Compiler Explorer'da
+   **Execute only** görünümü açılır. Tablodaki girdiler bu görünümün argüman
+   alanına yazılır. `05` ve `07` numaralı örnekler iki ayrı argüman gerektirir.
 
 Örnekler artan zorluk sırasına göre düzenlenmiştir.
 
@@ -45,6 +46,56 @@ seçenekleriyle de derlenebilir. İlki daha yüksek hız optimizasyonu, ikincisi
 daha küçük kod boyutu hedefler. Kısa örneklerde `-O2` ile `-O3` aynı çıktıyı
 üretebilir. C++98 uyumluluğunu ve derleyici uyarılarını denetlemek için
 `-std=c++98 -pedantic-errors -Wall -Wextra` kullanılabilir.
+
+## Binary Ninja için gerçekçi derleme ayarları
+
+Compiler Explorer'ın varsayılan assembly görünümü kaynak kod ile üretilen
+komutları karşılaştırmak içindir. Binary Ninja'da decompiler çıktısını
+incelemek için **bağlanmış çalıştırılabilir dosya** oluşturulur. Aşağıdaki
+komutlar x86-64 Linux üzerinde GCC ile ELF dosyası üretir. `-pie` ve `-s`
+bağlama aşamasında etkili olduğundan yalnızca assembly çıktısına bakılarak
+bu seçeneklerin sonucu değerlendirilemez.
+
+| Profil | Derleme komutu | Binary Ninja'da beklenen fark |
+| --- | --- | --- |
+| Öğrenme | `g++ -std=c++98 -O0 -g -fno-inline -fno-omit-frame-pointer -fno-pie -no-pie 03_check_digit.cpp -o 03_debug` | Hata ayıklama bilgisi ve işlev adları incelemeyi kolaylaştırır. |
+| Ara geçiş | `g++ -std=c++98 -O2 -g0 -fno-inline -fPIE -pie 05_name_serial.cpp -o 05_optimized` | Optimizasyon ve PIE görülür; semboller korunur. |
+| Dağıtım benzeri | `g++ -std=c++98 -O2 -g0 -fPIE -pie -s 07_toy_signature.cpp -o 07_release` | Hata ayıklama bilgisi ve yerel semboller bulunmaz; işlevler içeri alınmış olabilir. |
+
+`-g` hata ayıklama bilgisi ekler; `-g0` eklenmesini kapatır. `-s`, bağlanan
+ELF dosyasındaki yerel sembol tablosunu kaldırır; dinamik kütüphane adları
+görünmeye devam edebilir. Bazı sistemlerde `-g0` kullanılmasına rağmen
+başlangıç nesnelerinden gelen hata ayıklama bölümleri dosyada kalabilir.
+`-fPIE -pie` konumdan bağımsız
+çalıştırılabilir dosya üretir. `-fno-pie -no-pie` ise ilk incelemede sabit
+adresli bir dosya sağlar. `-fno-inline` işlev içeri alma optimizasyonunu
+sınırlar; bu seçeneğin kaldırılması, decompiler'da işlev sınırlarının nasıl
+değiştiğini karşılaştırmak için yararlıdır. `-fno-omit-frame-pointer`, ilk
+profilde yığın çerçevesinin izlenmesini kolaylaştırır.
+
+Compiler Explorer'da karşılaştırma yapılırken aynı **x86-64 GCC sürümü**
+seçilmeli ve **Intel sözdizimi** kullanılmalıdır. Binary Ninja'da önce
+**Disassembly** ve **Graph**, ardından **HLIL** veya **Pseudo C** görünümü
+incelenebilir. Özellikle son profilde `valid` adının bulunması beklenmemelidir:
+sembol kaldırma veya işlev içeri alma nedeniyle denetim mantığı başka bir
+işlevin içinde görünebilir. Bu durumda `VALID` ve `INVALID` metinlerinden
+başlayıp bunların kod başvuruları izlenebilir.
+
+Bu profiller Linux ELF içindir. Windows PE dosyası incelenecekse aynı hedef
+mimari için Windows derleyicisi ve farklı bağlayıcı seçenekleri gerekir.
+
+**Eski GCC ABI karşılaştırması:** `-std=c++98` dil sürümünü belirler; modern
+GCC'nin `std::__cxx11` adlarını kullanmasını tek başına engellemez.
+`05_name_serial.cpp` dosyasını sembolleri koruyan ara profilde ayrıca
+`-D_GLIBCXX_USE_CXX11_ABI=0` ile derlemek, eski `std::string` ABI'sinin
+sembol adlarını karşılaştırmaya yarar. Bu seçenek eski bir GCC sürümünü
+tam olarak taklit etmez.
+
+Kaynaklar: [Compiler Explorer kullanım kılavuzu](https://github.com/compiler-explorer/compiler-explorer/blob/main/docs/WhatIsCompilerExplorer.md),
+[GCC bağlayıcı seçenekleri](https://gcc.gnu.org/onlinedocs/gcc/Link-Options.html),
+[GCC hata ayıklama seçenekleri](https://gcc.gnu.org/onlinedocs/gcc/Debugging-Options.html),
+[GCC libstdc++ çift ABI açıklaması](https://gcc.gnu.org/onlinedocs/libstdc++/manual/using_dual_abi.html),
+[Binary Ninja HLIL ve Pseudo C kılavuzu](https://docs.binary.ninja/guide/index.html#high-level-il).
 
 ## Yerel doğrulama
 
