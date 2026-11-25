@@ -5,6 +5,8 @@
 #include <iostream>
 #include <sstream>
 
+using namespace std;
+
 #if UINT_MAX != 0xFFFFFFFFU
 #error "Bu örnek 32 bit unsigned int gerektirir"
 #endif
@@ -14,9 +16,10 @@ unsigned int fnv1a(const char* text) {
     const unsigned int prime = 16777619u;
     unsigned int hash = offset_basis;
     const unsigned char* byte = reinterpret_cast<const unsigned char*>(text);
-    for (; *byte != 0; ++byte) {
+    while (*byte != 0) {
         hash ^= *byte;
         hash *= prime;
+        ++byte;
     }
     return hash;
 }
@@ -26,14 +29,14 @@ bool valid(const char* name, const char* serial) {
         return false;
     }
 
-    std::ostringstream expected;
-    expected << std::uppercase << std::hex << std::setw(8)
-             << std::setfill('0') << fnv1a(name);
+    ostringstream expected;
+    expected << uppercase << hex << setw(8)
+             << setfill('0') << fnv1a(name);
     return expected.str() == serial;
 }
 
 int main(int argc, char** argv) {
     const char* name = argc > 1 ? argv[1] : "";
     const char* serial = argc > 2 ? argv[2] : "";
-    std::cout << (valid(name, serial) ? "VALID" : "INVALID") << '\n';
+    cout << (valid(name, serial) ? "VALID" : "INVALID") << '\n';
 }

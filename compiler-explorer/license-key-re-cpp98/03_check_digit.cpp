@@ -2,11 +2,13 @@
 #include <cstring>
 #include <iostream>
 
+using namespace std;
+
 bool valid(const char* key) {
     const int key_length = 6;
     const int data_digits = 5;
 
-    if (std::strlen(key) != key_length) {
+    if (strlen(key) != key_length) {
         return false;
     }
 
@@ -29,5 +31,5 @@ bool valid(const char* key) {
 
 int main(int argc, char** argv) {
     const char* key = argc > 1 ? argv[1] : "";
-    std::cout << (valid(key) ? "VALID" : "INVALID") << '\n';
+    cout << (valid(key) ? "VALID" : "INVALID") << '\n';
 }

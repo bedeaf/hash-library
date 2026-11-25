@@ -4,6 +4,8 @@
 #include <iostream>
 #include <sstream>
 
+using namespace std;
+
 unsigned int crc16(const char* text) {
     const unsigned int initial_value = 0xFFFFu;
     const unsigned int polynomial = 0x1021u;
@@ -12,7 +14,7 @@ unsigned int crc16(const char* text) {
     unsigned int crc = initial_value;
     const unsigned char* byte = reinterpret_cast<const unsigned char*>(text);
 
-    for (; *byte != 0; ++byte) {
+    while (*byte != 0) {
         crc ^= static_cast<unsigned int>(*byte) << 8;
         for (int bit = 0; bit < 8; ++bit) {
             const bool carry = (crc & high_bit) != 0;
@@ -21,6 +23,7 @@ unsigned int crc16(const char* text) {
                 crc ^= polynomial;
             }
         }
+        ++byte;
     }
     return crc;
 }
@@ -30,14 +33,14 @@ bool valid(const char* text, const char* serial) {
         return false;
     }
 
-    std::ostringstream expected;
-    expected << std::uppercase << std::hex << std::setw(4)
-             << std::setfill('0') << crc16(text);
+    ostringstream expected;
+    expected << uppercase << hex << setw(4)
+             << setfill('0') << crc16(text);
     return expected.str() == serial;
 }
 
 int main(int argc, char** argv) {
     const char* text = argc > 1 ? argv[1] : "";
     const char* serial = argc > 2 ? argv[2] : "";
-    std::cout << (valid(text, serial) ? "VALID" : "INVALID") << '\n';
+    cout << (valid(text, serial) ? "VALID" : "INVALID") << '\n';
 }

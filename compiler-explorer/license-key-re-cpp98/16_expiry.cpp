@@ -3,9 +3,11 @@
 #include <cstring>
 #include <iostream>
 
+using namespace std;
+
 bool has_date_format(const char* date) {
     const int date_length = 8;
-    if (std::strlen(date) != date_length) {
+    if (strlen(date) != date_length) {
         return false;
     }
     for (int position = 0; position < date_length; ++position) {
@@ -21,11 +23,11 @@ bool valid(const char* expiry_date, const char* current_date) {
         return false;
     }
     // YYYYMMDD biçiminde sözlük sırası tarih sırasıyla aynıdır.
-    return std::strcmp(expiry_date, current_date) >= 0;
+    return strcmp(expiry_date, current_date) >= 0;
 }
 
 int main(int argc, char** argv) {
     const char* expiry = argc > 1 ? argv[1] : "";
     const char* today = argc > 2 ? argv[2] : "";
-    std::cout << (valid(expiry, today) ? "VALID" : "INVALID") << '\n';
+    cout << (valid(expiry, today) ? "VALID" : "INVALID") << '\n';
 }

@@ -4,6 +4,8 @@
 #include <iostream>
 #include <sstream>
 
+using namespace std;
+
 unsigned int rotate_left_one_bit(unsigned int value) {
     return ((value << 1) | (value >> 7)) & 0xFFu;
 }
@@ -11,9 +13,10 @@ unsigned int rotate_left_one_bit(unsigned int value) {
 unsigned int token(const char* name) {
     unsigned int state = 0x5Au;
     const unsigned char* byte = reinterpret_cast<const unsigned char*>(name);
-    for (; *byte != 0; ++byte) {
+    while (*byte != 0) {
         state = rotate_left_one_bit(state);
         state ^= *byte;
+        ++byte;
     }
     return state;
 }
@@ -23,14 +26,14 @@ bool valid(const char* name, const char* serial) {
         return false;
     }
 
-    std::ostringstream expected;
-    expected << std::uppercase << std::hex << std::setw(2)
-             << std::setfill('0') << token(name);
+    ostringstream expected;
+    expected << uppercase << hex << setw(2)
+             << setfill('0') << token(name);
     return expected.str() == serial;
 }
 
 int main(int argc, char** argv) {
     const char* name = argc > 1 ? argv[1] : "";
     const char* serial = argc > 2 ? argv[2] : "";
-    std::cout << (valid(name, serial) ? "VALID" : "INVALID") << '\n';
+    cout << (valid(name, serial) ? "VALID" : "INVALID") << '\n';
 }

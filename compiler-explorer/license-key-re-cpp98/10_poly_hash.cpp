@@ -3,6 +3,8 @@
 #include <iostream>
 #include <sstream>
 
+using namespace std;
+
 #if UINT_MAX != 0xFFFFFFFFU
 #error "Bu örnek 32 bit unsigned int gerektirir"
 #endif
@@ -11,8 +13,9 @@ unsigned int hash_name(const char* name) {
     const unsigned int multiplier = 31u;
     unsigned int hash = 0;
     const unsigned char* byte = reinterpret_cast<const unsigned char*>(name);
-    for (; *byte != 0; ++byte) {
+    while (*byte != 0) {
         hash = hash * multiplier + *byte;
+        ++byte;
     }
     return hash;
 }
@@ -22,7 +25,7 @@ bool valid(const char* name, const char* serial) {
         return false;
     }
 
-    std::ostringstream expected;
+    ostringstream expected;
     expected << hash_name(name);
     return expected.str() == serial;
 }
@@ -30,5 +33,5 @@ bool valid(const char* name, const char* serial) {
 int main(int argc, char** argv) {
     const char* name = argc > 1 ? argv[1] : "";
     const char* serial = argc > 2 ? argv[2] : "";
-    std::cout << (valid(name, serial) ? "VALID" : "INVALID") << '\n';
+    cout << (valid(name, serial) ? "VALID" : "INVALID") << '\n';
 }

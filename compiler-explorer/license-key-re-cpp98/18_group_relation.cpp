@@ -2,6 +2,8 @@
 #include <cstring>
 #include <iostream>
 
+using namespace std;
+
 bool parse_four_digits(const char* start, unsigned int& number) {
     number = 0;
     for (int position = 0; position < 4; ++position) {
@@ -15,7 +17,7 @@ bool parse_four_digits(const char* start, unsigned int& number) {
 
 bool valid(const char* key) {
     const int group_length = 4;
-    if (std::strlen(key) != 9 || key[group_length] != '-') {
+    if (strlen(key) != 9 || key[group_length] != '-') {
         return false;
     }
 
@@ -31,5 +33,5 @@ bool valid(const char* key) {
 
 int main(int argc, char** argv) {
     const char* key = argc > 1 ? argv[1] : "";
-    std::cout << (valid(key) ? "VALID" : "INVALID") << '\n';
+    cout << (valid(key) ? "VALID" : "INVALID") << '\n';
 }

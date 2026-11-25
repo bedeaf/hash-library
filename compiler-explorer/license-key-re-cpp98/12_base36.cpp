@@ -3,6 +3,8 @@
 #include <iostream>
 #include <sstream>
 
+using namespace std;
+
 int digit_value(char character) {
     if (character >= '0' && character <= '9') {
         return character - '0';
@@ -16,7 +18,7 @@ int digit_value(char character) {
 bool decode_base36(const char* text, unsigned int& value) {
     const int key_length = 2;
     const unsigned int base = 36u;
-    if (std::strlen(text) != key_length) {
+    if (strlen(text) != key_length) {
         return false;
     }
 
@@ -37,7 +39,7 @@ bool valid(const char* key, const char* serial) {
         return false;
     }
 
-    std::ostringstream expected;
+    ostringstream expected;
     expected << value;
     return expected.str() == serial;
 }
@@ -45,5 +47,5 @@ bool valid(const char* key, const char* serial) {
 int main(int argc, char** argv) {
     const char* key = argc > 1 ? argv[1] : "";
     const char* serial = argc > 2 ? argv[2] : "";
-    std::cout << (valid(key, serial) ? "VALID" : "INVALID") << '\n';
+    cout << (valid(key, serial) ? "VALID" : "INVALID") << '\n';
 }

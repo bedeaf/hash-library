@@ -2,11 +2,14 @@
 #include <iostream>
 #include <sstream>
 
+using namespace std;
+
 unsigned int byte_sum(const char* text) {
     unsigned int sum = 0;
     const unsigned char* byte = reinterpret_cast<const unsigned char*>(text);
-    for (; *byte != 0; ++byte) {
+    while (*byte != 0) {
         sum += *byte;
+        ++byte;
     }
     return sum;
 }
@@ -19,7 +22,7 @@ bool valid(const char* name, const char* machine, const char* serial) {
     const unsigned int name_value = byte_sum(name) * 31u;
     const unsigned int machine_value = byte_sum(machine);
     const unsigned int expected_number = name_value ^ machine_value;
-    std::ostringstream expected;
+    ostringstream expected;
     expected << expected_number;
     return expected.str() == serial;
 }
@@ -28,5 +31,5 @@ int main(int argc, char** argv) {
     const char* name = argc > 1 ? argv[1] : "";
     const char* machine = argc > 2 ? argv[2] : "";
     const char* serial = argc > 3 ? argv[3] : "";
-    std::cout << (valid(name, machine, serial) ? "VALID" : "INVALID") << '\n';
+    cout << (valid(name, machine, serial) ? "VALID" : "INVALID") << '\n';
 }

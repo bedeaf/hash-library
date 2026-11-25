@@ -2,12 +2,14 @@
 #include <cstring>
 #include <iostream>
 
+using namespace std;
+
 bool valid(const char* key) {
     const char substitution_table[] = "QWERTYUIOPASDFGHJKLZXCVBNM";
     const char expected_pattern[] = "QWER";
     const int key_length = 4;
 
-    if (std::strlen(key) != key_length) {
+    if (strlen(key) != key_length) {
         return false;
     }
 
@@ -26,5 +28,5 @@ bool valid(const char* key) {
 
 int main(int argc, char** argv) {
     const char* key = argc > 1 ? argv[1] : "";
-    std::cout << (valid(key) ? "VALID" : "INVALID") << '\n';
+    cout << (valid(key) ? "VALID" : "INVALID") << '\n';
 }

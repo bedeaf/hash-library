@@ -6,6 +6,8 @@
 #include <iostream>
 #include <sstream>
 
+using namespace std;
+
 #if UINT_MAX != 0xFFFFFFFFU
 #error "Bu örnek 32 bit unsigned int gerektirir"
 #endif
@@ -18,7 +20,7 @@ unsigned int load_little_endian_word(const unsigned char* bytes) {
     return word;
 }
 
-void make_token(const char* name, unsigned int& left, unsigned int& right) {
+void make_token(const char* name, unsigned int& left_word, unsigned int& right_word) {
     const int word_size = 4;
     const int name_capacity = 2 * word_size;
     const int round_count = 16;
@@ -34,36 +36,36 @@ void make_token(const char* name, unsigned int& left, unsigned int& right) {
     }
 
     // Sekiz baytı iki adet 32 bit sözcüğe düşük bayt önce olacak biçimde yerleştir.
-    left = load_little_endian_word(name_bytes);
-    right = load_little_endian_word(name_bytes + word_size);
+    left_word = load_little_endian_word(name_bytes);
+    right_word = load_little_endian_word(name_bytes + word_size);
 
     unsigned int sum = 0;
     for (int round = 0; round < round_count; ++round) {
         sum += round_delta;
-        left += ((right << 4) + key[0]) ^ (right + sum) ^
-                ((right >> 5) + key[1]);
-        right += ((left << 4) + key[2]) ^ (left + sum) ^
-                 ((left >> 5) + key[3]);
+        left_word += ((right_word << 4) + key[0]) ^ (right_word + sum) ^
+                     ((right_word >> 5) + key[1]);
+        right_word += ((left_word << 4) + key[2]) ^ (left_word + sum) ^
+                      ((left_word >> 5) + key[3]);
     }
 }
 
 bool valid(const char* name, const char* serial) {
-    const std::size_t maximum_name_length = 8;
-    const std::size_t length = std::strlen(name);
+    const size_t maximum_name_length = 8;
+    const size_t length = strlen(name);
     if (length == 0 || length > maximum_name_length) {
         return false;
     }
-    unsigned int left = 0;
-    unsigned int right = 0;
-    make_token(name, left, right);
-    std::ostringstream expected;
-    expected << std::uppercase << std::hex << std::setfill('0')
-             << std::setw(8) << left << std::setw(8) << right;
+    unsigned int left_word = 0;
+    unsigned int right_word = 0;
+    make_token(name, left_word, right_word);
+    ostringstream expected;
+    expected << uppercase << hex << setfill('0')
+             << setw(8) << left_word << setw(8) << right_word;
     return expected.str() == serial;
 }
 
 int main(int argc, char** argv) {
     const char* name = argc > 1 ? argv[1] : "";
     const char* serial = argc > 2 ? argv[2] : "";
-    std::cout << (valid(name, serial) ? "VALID" : "INVALID") << '\n';
+    cout << (valid(name, serial) ? "VALID" : "INVALID") << '\n';
 }

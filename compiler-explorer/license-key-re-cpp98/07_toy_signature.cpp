@@ -4,6 +4,8 @@
 #include <cstdlib>
 #include <iostream>
 
+using namespace std;
+
 bool parse_unsigned_decimal(const char* text, unsigned long& value) {
     if (*text == '\0') {
         return false;
@@ -15,7 +17,7 @@ bool parse_unsigned_decimal(const char* text, unsigned long& value) {
     }
     errno = 0;
     char* end = 0;
-    value = std::strtoul(text, &end, 10);
+    value = strtoul(text, &end, 10);
     return errno == 0 && *end == '\0';
 }
 
@@ -51,5 +53,5 @@ bool valid(const char* message_text, const char* signature_text) {
 int main(int argc, char** argv) {
     const char* message = argc > 1 ? argv[1] : "";
     const char* signature = argc > 2 ? argv[2] : "";
-    std::cout << (valid(message, signature) ? "VALID" : "INVALID") << '\n';
+    cout << (valid(message, signature) ? "VALID" : "INVALID") << '\n';
 }

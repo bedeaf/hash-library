@@ -2,11 +2,13 @@
 #include <cstring>
 #include <iostream>
 
+using namespace std;
+
 bool valid(const char* key) {
     const unsigned char encoded_key[] = { 0x15, 0x08, 0x18, 0x13, 0x0E };
     const unsigned char xor_mask = 0x5A;
 
-    if (std::strlen(key) != sizeof(encoded_key)) {
+    if (strlen(key) != sizeof(encoded_key)) {
         return false;
     }
 
@@ -22,5 +24,5 @@ bool valid(const char* key) {
 
 int main(int argc, char** argv) {
     const char* key = argc > 1 ? argv[1] : "";
-    std::cout << (valid(key) ? "VALID" : "INVALID") << '\n';
+    cout << (valid(key) ? "VALID" : "INVALID") << '\n';
 }

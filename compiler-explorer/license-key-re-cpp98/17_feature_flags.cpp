@@ -2,6 +2,8 @@
 #include <cstring>
 #include <iostream>
 
+using namespace std;
+
 int hex_digit(char character) {
     if (character >= '0' && character <= '9') {
         return character - '0';
@@ -13,7 +15,7 @@ int hex_digit(char character) {
 }
 
 bool valid(const char* key) {
-    if (std::strlen(key) != 2) {
+    if (strlen(key) != 2) {
         return false;
     }
 
@@ -33,5 +35,5 @@ bool valid(const char* key) {
 
 int main(int argc, char** argv) {
     const char* key = argc > 1 ? argv[1] : "";
-    std::cout << (valid(key) ? "VALID" : "INVALID") << '\n';
+    cout << (valid(key) ? "VALID" : "INVALID") << '\n';
 }
